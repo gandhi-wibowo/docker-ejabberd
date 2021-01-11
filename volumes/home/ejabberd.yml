@@ -152,7 +152,9 @@ access_rules:
   pubsub_createnode:
     allow: local
   trusted_network:
-    allow: loopback
+    - allow
+  register:
+    - allow
 
 api_permissions:
   "console commands":
@@ -268,6 +270,8 @@ modules:
     ## address. See the Jabber SPAM Manifesto for details:
     ## https://github.com/ge0rg/jabber-spam-fighting-manifesto
     ip_access: trusted_network
+    access: register
+    access_from: register
   mod_roster:
     versioning: true
   mod_sip: {}
