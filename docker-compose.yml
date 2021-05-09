@@ -1,5 +1,30 @@
-version: '2'
+version: '3'
+
 services:
+  db:
+    image: "mysql"
+    container_name: "db-mysql"
+    restart: "unless-stopped"
+    environment:
+      MYSQL_ROOT_PASSWORD: "p4ssw0Rd"
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: ejabberd
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./volumes/mysql_data/data:/var/lib/mysql
+      - ./volumes/mysql_data/conf:/etc/mysql/conf.d
+      - ./volumes/mysql_data/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+
+  adminer:
+    image: "adminer"
+    container_name: "db-adminer"
+    restart: "unless-stopped"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
   ejabberd:
     image: ejabberd/ecs
     container_name: ejabberd
@@ -7,5 +32,8 @@ services:
       - "5222:5222"
       - "5269:5269"
       - "5280:5280"
+      - "5282:5282"
+    depends_on:
+      - db      
     volumes:
-      - ./volumes/home:/home/ejabberd/conf
+      - ./volumes/ejabberd_conf:/home/ejabberd/conf
